@@ -5,7 +5,7 @@
                         <h4>Add Student</h4>
                   </div>
                   <div class="card-body text-center" v-if="loader">
-                        <span class="loader"></span>
+                        <loader-component color="loaderColor"></loader-component>
                   </div>
                   <div class="card-body" v-else>
 
@@ -50,12 +50,11 @@ import axios from 'axios';
 
 import Swal from 'sweetalert2';
 
-
-
-import { useRouter } from 'vue-router';
-
+import LoaderComponent from '@/components/LoaderComponent.vue'
 
 export default {
+
+
       name: 'studentCreate',
 
       data() {
@@ -70,9 +69,13 @@ export default {
                   },
 
                   loader: true,
-
                   errors: {},
+                  loaderColor: '#333'
             }
+      },
+
+      components: {
+            LoaderComponent,    
       },
 
       mounted() {
@@ -133,24 +136,5 @@ export default {
 </script>
 
 <style scoped>
-.loader {
-      width: 48px;
-      height: 48px;
-      border: 5px solid #333;
-      border-bottom-color: transparent;
-      border-radius: 50%;
-      display: inline-block;
-      box-sizing: border-box;
-      animation: rotation 1s linear infinite;
-}
 
-@keyframes rotation {
-      0% {
-            transform: rotate(0deg);
-      }
-
-      100% {
-            transform: rotate(360deg);
-      }
-}
 </style>

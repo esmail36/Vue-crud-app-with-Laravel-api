@@ -50,7 +50,7 @@
 
                         <tbody v-else-if="!emptyRecord && students.length == 0">
                               <td colspan="7" class="text-center">
-                                    <span class="loader"></span>
+                                    <loader-component color="loaderColor"></loader-component>
                               </td>
                         </tbody>
 
@@ -67,6 +67,8 @@ import Swal from 'sweetalert2';
 
 import { format } from 'date-fns';
 
+import LoaderComponent from '@/components/LoaderComponent.vue'
+
 export default {
       name: 'studentsView',
       data() {
@@ -76,7 +78,12 @@ export default {
                   format,
                   emptyRecord: false,
                   emptyMsg: '',
+                  loaderColor: '#fff'
             }
+      },
+
+      components: {
+            LoaderComponent,
       },
 
       mounted() {
@@ -146,26 +153,6 @@ export default {
 </script>
 
 <style scoped>
-.loader {
-      width: 48px;
-      height: 48px;
-      border: 5px solid #FFF;
-      border-bottom-color: transparent;
-      border-radius: 50%;
-      display: inline-block;
-      box-sizing: border-box;
-      animation: rotation 1s linear infinite;
-}
-
-@keyframes rotation {
-      0% {
-            transform: rotate(0deg);
-      }
-
-      100% {
-            transform: rotate(360deg);
-      }
-}
 
 @media (max-width: 767px) {
       img {
