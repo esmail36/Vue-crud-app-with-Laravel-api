@@ -1,5 +1,5 @@
 <template>
-      <div class="card py-4">
+      <div class="card py-4 bg-dark text-white">
             <div class="car-header d-flex px-4 align-items-center justify-content-between">
                   <h4>
                         Students
@@ -9,7 +9,7 @@
             </div>
 
             <div class="card-body">
-                  <table class="table table-dark table-striped table-hover">
+                  <table class="table table-dark table-striped table-hover table-responsive-md">
                         <thead>
                               <tr>
                                     <th scope="col">#</th>
@@ -21,14 +21,22 @@
                                     <th scope="col">Actions</th>
                               </tr>
                         </thead>
-                        <tbody v-if="this.students.length > 0">
+
+                        <tbody v-if="emptyRecord">
+                              <td colspan="7" class="text-center">
+                                    <img class="img-responsive" :src="require('@/assets/images/empty-data.png')"
+                                          alt="empty-data">
+                              </td>
+                        </tbody>
+
+                        <tbody v-if="!emptyRecord && students.length > 0">
                               <tr v-for="(student, index) in students" :key="index">
                                     <th>{{ student.id }}</th>
                                     <td>{{ student.name }}</td>
                                     <td>{{ student.course }}</td>
                                     <td>{{ student.email }}</td>
                                     <td>{{ student.phone }}</td>
-                                    <td>{{ student.created_at }}</td>
+                                    <td>{{ format(new Date(student.created_at), 'Y-MM-dd') }}</td>
                                     <td>
                                           <div class="btns">
                                                 <router-link class="btn btn-success btn-sm"
@@ -39,7 +47,7 @@
                               </tr>
                         </tbody>
 
-                        <tbody v-else>
+                        <tbody v-else-if="!emptyRecord && students.length == 0">
                               <td colspan="7" class="text-center">
                                     <span class="loader"></span>
                               </td>
@@ -54,12 +62,18 @@
 
 import axios from 'axios';
 
+
+import { format } from 'date-fns';
+
 export default {
-      name: 'students',
+      name: 'studentsView',
       data() {
             return {
                   students: [],
                   loader: true,
+                  format,
+                  emptyRecord: false,
+                  emptyMsg: '',
             }
       },
 
@@ -73,11 +87,16 @@ export default {
             getStudents() {
                   axios.get('http://127.0.0.1:8000/api/students')
                         .then(res => {
-                              this.students = res.data.students;
-                              // console.log(res.data.students);
+                              if(res.data == 204) {
+                                    this.emptyRecord = true
+                              } else {
+
+                                    this.students = res.data.students;
+                              }
+
                         })
                         .catch(function (error) {
-
+                              
                         })
             },
 
@@ -111,4 +130,16 @@ export default {
       100% {
             transform: rotate(360deg);
       }
-}</style>    
+}
+
+@media (max-width: 767px) {
+      img {
+            height: 180px;
+            object-fit: cover;
+      }
+
+}
+.btns {
+      text-align: center;
+}
+</style>    
