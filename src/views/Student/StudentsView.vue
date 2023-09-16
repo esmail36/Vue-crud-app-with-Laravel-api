@@ -40,8 +40,9 @@
                                     <td>
                                           <div class="btns">
                                                 <router-link class="btn btn-success btn-sm"
-                                                      :to="`/student/${student.id}/edit`">Edit</router-link>
-                                                <button class="btn btn-danger btn-sm mx-2">Delete</button>
+                                                      :to="{ path: `/student/${student.slug}/edit` }">Edit</router-link>
+                                                <button class="btn btn-danger btn-sm mx-2"
+                                                      @click="deleteStudent(student.slug)">Delete</button>
                                           </div>
                                     </td>
                               </tr>
@@ -62,6 +63,7 @@
 
 import axios from 'axios';
 
+import Swal from 'sweetalert2';
 
 import { format } from 'date-fns';
 
@@ -87,7 +89,7 @@ export default {
             getStudents() {
                   axios.get('http://127.0.0.1:8000/api/students')
                         .then(res => {
-                              if(res.data == 204) {
+                              if (res.data == 204) {
                                     this.emptyRecord = true
                               } else {
 
@@ -96,7 +98,7 @@ export default {
 
                         })
                         .catch(function (error) {
-                              
+
                         })
             },
 
@@ -104,7 +106,40 @@ export default {
                   setTimeout(() => {
                         this.loader = false
                   }, 1500)
-            }
+            },
+
+            deleteStudent(studentSlug) {
+                  Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                  }).then((result) => {
+                        if (result.isConfirmed) {
+
+                              axios.delete(`http://127.0.0.1:8000/api/student/${studentSlug}/delete`)
+                              
+                              .then(res => {
+                                    
+                                    this.emptyMsg = res.data.message
+                                    this.getStudents();
+                              })
+                              
+                              .catch(function(error) {
+
+                              })
+
+                              Swal.fire(
+                                    'Deleted!',
+                                    this.emptyMsg,
+                                    'success'
+                              )
+                        }
+                  })
+            },
 
       }
 }
@@ -139,6 +174,7 @@ export default {
       }
 
 }
+
 .btns {
       text-align: center;
 }
