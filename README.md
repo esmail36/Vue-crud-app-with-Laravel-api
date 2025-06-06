@@ -17,11 +17,10 @@ This project is a full-stack web application built with **Vue.js** for the front
 ### Frontend
 - Vue 3
 - Axios
-- Vue Router (if applicable)
+- Vue Router
 
 ### Backend
 - Laravel 10+
-- Laravel Sanctum (if used for auth)
 - API Routes & Controllers
 - Eloquent ORM
 
